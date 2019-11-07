@@ -13,20 +13,27 @@ namespace Mono.Game.Models
     class Player : Actor
     {
         public int Hp { get; set; }
-        public int Mp { get; set; }
+
         public int Xp { get; set; }
+        public int Stamina { get; set; }
         public int SprintSpeed { get; set; }
 
-        public Player(int hp, int mp, int xp, uint id, string name, int speed, int sprintSpeed, string textureName)
+
+
+        public Player(int x, int y, int hp, int stamina, int xp, uint id, string name, int speed, int sprintSpeed, float rotationSpeed, string textureName)
         {
+            this.X = x;
+            this.Y = y;
             this.Hp = hp;
-            this.Mp = mp;
+            this.Stamina = stamina;
             this.Xp = xp;
             this.Id = id;
             this.Name = name;
             this.Speed = speed;
             this.SprintSpeed = sprintSpeed;
             this.TextureName = textureName;
+            this.Rotation = 0f;
+            this.RotationSpeed = rotationSpeed;
 
             this.CurrentDirection = (int)DIRECTIONS.DOWN;
         }
@@ -38,26 +45,33 @@ namespace Mono.Game.Models
 
         public override void Update(GameTime gameTime)
         {
+            float Dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             var kstate = Keyboard.GetState();
 
             if (kstate.IsKeyDown(Keys.Up))
             {
-                Y -= Speed * (int)gameTime.ElapsedGameTime.TotalSeconds * SprintSpeed;
+                //Y -= (int)(Speed * Dt * SprintSpeed);
+                Y += (float)(Speed * Math.Sin(Rotation) * Dt * SprintSpeed);
+                X += (float)(Speed * Math.Cos(Rotation) * Dt * SprintSpeed);
                 CurrentDirection = (int)DIRECTIONS.UP;
+                
             }
             if (kstate.IsKeyDown(Keys.Down))
             {
-                Y += Speed * (int)gameTime.ElapsedGameTime.TotalSeconds * SprintSpeed;
+                //Y += (int)(Speed * Dt * SprintSpeed);
+                Y -= (float)(Speed * Math.Sin(Rotation) * Dt * SprintSpeed);
+                X -= (float)(Speed * Math.Cos(Rotation) * Dt * SprintSpeed);
                 CurrentDirection = (int)DIRECTIONS.DOWN;
             }
             if (kstate.IsKeyDown(Keys.Left))
             {
-                X -= Speed * (int)gameTime.ElapsedGameTime.TotalSeconds * SprintSpeed;
+                Rotation -= RotationSpeed * Dt * SprintSpeed;
                 CurrentDirection = (int)DIRECTIONS.LEFT;
             }
             if (kstate.IsKeyDown(Keys.Right))
             {
-                X += Speed * (int)gameTime.ElapsedGameTime.TotalSeconds * SprintSpeed;
+                Rotation += RotationSpeed * Dt * SprintSpeed;
                 CurrentDirection = (int)DIRECTIONS.RIGHT;
             }
 
@@ -66,11 +80,14 @@ namespace Mono.Game.Models
             if (kstate.IsKeyUp(Keys.LeftShift))
                 SprintSpeed = 1;
 
+
+            Console.WriteLine("RotationSpeed: " + this.RotationSpeed);
+            Console.WriteLine("Rotation: " + this.Rotation);
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) 
         {
-            spriteBatch.Draw(Texture, new Vector2(X,Y), null, Color.White, 0f, new Vector2(Texture.Width / 2, Texture.Height / 2), Vector2.One, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, new Vector2(X,Y), null, Color.White, Rotation, new Vector2(Texture.Width / 2, Texture.Height / 2), Vector2.One, SpriteEffects.None, 0f);
         }
     }
 }

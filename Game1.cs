@@ -5,11 +5,16 @@ using Mono.Game.Models;
 using System;
 using System.Collections.Generic;
 
+
 /// <summary>
 /// This is the main type for your game.
 /// </summary>
 public class Game1 : Game
 {
+    Player p1;
+    int screenWidth;
+    int screenHeight;
+
     enum WEAPONS { WEAPON1, WEAPON2 }
     int currentWeapon = (int)WEAPONS.WEAPON1;
 
@@ -47,6 +52,8 @@ public class Game1 : Game
     public Game1()
     {
         graphics = new GraphicsDeviceManager(this);
+        screenWidth = graphics.PreferredBackBufferWidth / 2;
+        screenHeight = graphics.PreferredBackBufferHeight / 2;
         Content.RootDirectory = "Content";
     }
 
@@ -59,6 +66,9 @@ public class Game1 : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
+
+        p1 = new Player(screenWidth / 2, screenHeight / 2, 100, 100, 0, 1, "Drekutu", 100, 1, (float)Math.PI, "ball");
+
         ballPosition = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
         ballSpeed = 100f;
         sprintSpeed = 1f;
@@ -86,9 +96,11 @@ public class Game1 : Game
         spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
-        ballTexture = Content.Load<Texture2D>("ball");
-        weapon1Texture = Content.Load<Texture2D>("weapon1");
-        weapon2Texture = Content.Load<Texture2D>("weapon2");
+        //ballTexture = Content.Load<Texture2D>("ball");
+        //weapon1Texture = Content.Load<Texture2D>("weapon1");
+        //weapon2Texture = Content.Load<Texture2D>("weapon2");
+
+        p1.LoadContent(this.Content);
 
         hudFont = Content.Load<SpriteFont>("HUDFont");
     }
@@ -115,61 +127,63 @@ public class Game1 : Game
         // TODO: Add your update logic here
         var kstate = Keyboard.GetState();
 
-        if (kstate.IsKeyDown(Keys.Up))
-        {
-            ballPosition.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds * sprintSpeed;
-            currentDirection = (int)DIRECTIONS.UP;
-        }
-        if (kstate.IsKeyDown(Keys.Down))
-        {
-            ballPosition.Y += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds * sprintSpeed;
-            currentDirection = (int)DIRECTIONS.DOWN;
-        }
-        if (kstate.IsKeyDown(Keys.Left))
-        {
-            ballPosition.X -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds * sprintSpeed;
-            currentDirection = (int)DIRECTIONS.LEFT;
-        }
-        if (kstate.IsKeyDown(Keys.Right))
-        {
-            ballPosition.X += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds * sprintSpeed;
-            currentDirection = (int)DIRECTIONS.RIGHT;
-        }
+        p1.Update(gameTime);
 
-        if (kstate.IsKeyDown(Keys.LeftShift))
-            sprintSpeed = 2f;
-        if (kstate.IsKeyUp(Keys.LeftShift))
-            sprintSpeed = 1f;
+        //if (kstate.IsKeyDown(Keys.Up))
+        //{
+        //    ballPosition.Y -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds * sprintSpeed;
+        //    currentDirection = (int)DIRECTIONS.UP;
+        //}
+        //if (kstate.IsKeyDown(Keys.Down))
+        //{
+        //    ballPosition.Y += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds * sprintSpeed;
+        //    currentDirection = (int)DIRECTIONS.DOWN;
+        //}
+        //if (kstate.IsKeyDown(Keys.Left))
+        //{
+        //    ballPosition.X -= ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds * sprintSpeed;
+        //    currentDirection = (int)DIRECTIONS.LEFT;
+        //}
+        //if (kstate.IsKeyDown(Keys.Right))
+        //{
+        //    ballPosition.X += ballSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds * sprintSpeed;
+        //    currentDirection = (int)DIRECTIONS.RIGHT;
+        //}
 
-        if (kstate.IsKeyDown(Keys.D1))
-        {
-            weaponText = "Weapon 1";
-            currentWeapon = (int)WEAPONS.WEAPON1;
-        }
-        if (kstate.IsKeyDown(Keys.D2))
-        {
-            weaponText = "Weapon 2";
-            currentWeapon = (int)WEAPONS.WEAPON2;
-        }
+        //if (kstate.IsKeyDown(Keys.LeftShift))
+        //    sprintSpeed = 2f;
+        //if (kstate.IsKeyUp(Keys.LeftShift))
+        //    sprintSpeed = 1f;
 
-        if (kstate.IsKeyDown(Keys.Space) && !isFiring && currentLiveAmmo < maxLiveAmmo)
-        {
-            isFiring = true;
-            currentLiveAmmo++;
-            ammo.Add((ballPosition, weapon1Texture));
-        }
-        if (kstate.IsKeyUp(Keys.Space))
-        {
-            isFiring = false;
-        }
+        //if (kstate.IsKeyDown(Keys.D1))
+        //{
+        //    weaponText = "Weapon 1";
+        //    currentWeapon = (int)WEAPONS.WEAPON1;
+        //}
+        //if (kstate.IsKeyDown(Keys.D2))
+        //{
+        //    weaponText = "Weapon 2";
+        //    currentWeapon = (int)WEAPONS.WEAPON2;
+        //}
 
-        for(int i = 0; i < ammo.Count; i++)
-        {
-            ammo[i] = (new Vector2(ammo[i].Item1.X+speedWeapon1, ammo[i].Item1.Y), ammo[i].Item2);
-        }
+        //if (kstate.IsKeyDown(Keys.Space) && !isFiring && currentLiveAmmo < maxLiveAmmo)
+        //{
+        //    isFiring = true;
+        //    currentLiveAmmo++;
+        //    ammo.Add((ballPosition, weapon1Texture));
+        //}
+        //if (kstate.IsKeyUp(Keys.Space))
+        //{
+        //    isFiring = false;
+        //}
 
-        ballPosition.X = Math.Min(Math.Max(ballTexture.Width / 2, ballPosition.X), graphics.PreferredBackBufferWidth - ballTexture.Width / 2);
-        ballPosition.Y = Math.Min(Math.Max(ballTexture.Height / 2, ballPosition.Y), graphics.PreferredBackBufferHeight - ballTexture.Height / 2);
+        //for(int i = 0; i < ammo.Count; i++)
+        //{
+        //    ammo[i] = (new Vector2(ammo[i].Item1.X+speedWeapon1, ammo[i].Item1.Y), ammo[i].Item2);
+        //}
+
+        //ballPosition.X = Math.Min(Math.Max(ballTexture.Width / 2, ballPosition.X), graphics.PreferredBackBufferWidth - ballTexture.Width / 2);
+        //ballPosition.Y = Math.Min(Math.Max(ballTexture.Height / 2, ballPosition.Y), graphics.PreferredBackBufferHeight - ballTexture.Height / 2);
 
         base.Update(gameTime);
     }
@@ -184,14 +198,16 @@ public class Game1 : Game
 
         // TODO: Add your drawing code here
         spriteBatch.Begin();
-        spriteBatch.Draw(ballTexture, ballPosition, null, Color.White, 0f, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2), Vector2.One, SpriteEffects.None, 0f);
+        p1.Draw(gameTime, spriteBatch);
+
+        //spriteBatch.Draw(ballTexture, ballPosition, null, Color.White, 0f, new Vector2(ballTexture.Width / 2, ballTexture.Height / 2), Vector2.One, SpriteEffects.None, 0f);
         
         foreach((Vector2,Texture2D) a in ammo)
         {
             spriteBatch.Draw(a.Item2, a.Item1, null, Color.White, 0f, new Vector2(a.Item2.Width / 2, a.Item2.Height / 2), Vector2.One, SpriteEffects.None, 0f);
         }
 
-        spriteBatch.DrawString(hudFont, weaponTextPrefix + weaponText, new Vector2(0f,0f), Color.White, 0, new Vector2(0f,0f), 1.0f, SpriteEffects.None, 0.5f);
+        spriteBatch.DrawString(hudFont, p1.Name, new Vector2(0f,0f), Color.White, 0, new Vector2(0f,0f), 1.0f, SpriteEffects.None, 0.5f);
         spriteBatch.End();
 
         base.Draw(gameTime);

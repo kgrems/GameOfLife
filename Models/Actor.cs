@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace Mono.Game.Models
 {
@@ -12,11 +13,14 @@ namespace Mono.Game.Models
 
         public Texture2D Texture { get; set; }
         public string TextureName { get; set; }
-        public int X { get; set; }
-        public int Y { get; set;}
-        public int Speed { get; set; }
+        public float X { get; set; }
+        public float Y { get; set;}
+        public float Speed { get; set; }
 
         public int CurrentDirection { get; set; }
+
+        public float Rotation { get; set; }
+        public float RotationSpeed { get; set; }
 
         public abstract void LoadContent(ContentManager contentManager);
         public abstract void Update(GameTime gameTime);

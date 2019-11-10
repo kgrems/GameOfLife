@@ -2,21 +2,28 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Mono.Game.Interfaces;
+using System.Collections.Generic;
 
 namespace Mono.Game.Models
 {
     class Weapon : Actor
     {
-        double speed;
-        double damage;
+        double Damage { get; set; }
+        int MaxLiveProjectiles { get; set; }
+        int FireRate { get; set; }
 
-        public Weapon(int x, int y, string textureName, double speed, double damage)
+        List<Projectile> Projectiles { get; set; }
+
+        public Weapon(float x, float y, string textureName, float speed, double damage, int maxLiveProjectiles, int fireRate)
         {
             this.TextureName = textureName;
             this.X = x;
             this.Y = y;
-            this.speed = speed;
-            this.damage = damage;
+            this.Speed = speed;
+            this.Damage = damage;
+
+            this.MaxLiveProjectiles = maxLiveProjectiles;
+            this.FireRate = fireRate;
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
@@ -29,9 +36,22 @@ namespace Mono.Game.Models
             this.Texture = contentManager.Load<Texture2D>(TextureName);
         }
 
+        public void Fire()
+        {
+            if(Projectiles.Count < MaxLiveProjectiles)
+            {
+                Projectiles.Add(new Projectile(X,Y,Speed));
+            }
+        }
+
         public override void Update(GameTime gameTime)
         {
-            throw new System.NotImplementedException();
+            float Dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            foreach (Projectile projectile in Projectiles)
+            {
+                projectile.Update(gameTime);
+            }
         }
     }
 }

@@ -52,11 +52,18 @@
     <Compile Include="Interfaces\IUseable.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\Player.cs" />
+    <Compile Include="Models\Projectile.cs" />
     <Compile Include="Models\Weapon.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="DataTypes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\GeonBit.UI.3.4.0.1\lib\geonbitui\DataTypes.dll</HintPath>
+    </Reference>
+    <Reference Include="GeonBit.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\GeonBit.UI.3.4.0.1\lib\geonbitui\GeonBit.UI.dll</HintPath>
+    </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>
     </Reference>

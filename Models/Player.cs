@@ -17,8 +17,9 @@ namespace Mono.Game.Models
         public int Xp { get; set; }
         public int Stamina { get; set; }
         public int SprintSpeed { get; set; }
+        public bool IsFiring { get; set; }
 
-
+        public Weapon Weapon { get; set; }
 
         public Player(int x, int y, int hp, int stamina, int xp, uint id, string name, int speed, int sprintSpeed, float rotationSpeed, string textureName)
         {
@@ -35,6 +36,7 @@ namespace Mono.Game.Models
             this.Rotation = 0f;
             this.RotationSpeed = rotationSpeed;
 
+            this.IsFiring = false;
             this.CurrentDirection = (int)DIRECTIONS.DOWN;
         }
 
@@ -75,14 +77,26 @@ namespace Mono.Game.Models
                 CurrentDirection = (int)DIRECTIONS.RIGHT;
             }
 
-            if (kstate.IsKeyDown(Keys.LeftShift))
+            if (kstate.IsKeyDown(Keys.LeftShift)) {
                 SprintSpeed = 2;
-            if (kstate.IsKeyUp(Keys.LeftShift))
+            }
+
+            if (kstate.IsKeyUp(Keys.LeftShift)) {
                 SprintSpeed = 1;
+            }
 
-
-            Console.WriteLine("RotationSpeed: " + this.RotationSpeed);
-            Console.WriteLine("Rotation: " + this.Rotation);
+            if (kstate.IsKeyDown(Keys.Space))
+            {
+                if (!IsFiring)
+                {
+                    IsFiring = true;
+                    Weapon.Fire();
+                }
+            }
+            if (kstate.IsKeyUp(Keys.Space))
+            {
+                IsFiring = false;
+            }
         }
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) 

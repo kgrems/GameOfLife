@@ -11,28 +11,37 @@ namespace Mono.Game.Models
 {
     class Projectile : Actor
     {
-        public Projectile(float x, float y, float speed)
+        float yc = 0.0f;
+        float xc = 0.0f;
+
+        public Projectile(float x, float y, float speed, float rotation, string textureName)
         {
             this.X = x;
             this.Y = y;
             this.Speed = speed;
+            this.TextureName = textureName;
+            this.Rotation = rotation;
+            this.yc = (float)Math.Sin(Rotation) * Speed;
+            this.xc = (float)Math.Cos(Rotation) * Speed;
         }
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public override void LoadContent(ContentManager contentManager)
         {
-            throw new NotImplementedException();
+            this.Texture = contentManager.Load<Texture2D>(TextureName);
         }
 
         public override void Update(GameTime gameTime)
         {
             float Dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            X += Speed * Dt;
-            Y += Speed * Dt;
+            X += xc * Dt;
+            Y += yc * Dt;
+        }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -90,7 +90,7 @@ namespace Mono.Game.Models
                 if (!IsFiring)
                 {
                     IsFiring = true;
-                    Weapon.Fire();
+                    Weapon.Fire(X,Y,Rotation);
                 }
             }
             if (kstate.IsKeyUp(Keys.Space))

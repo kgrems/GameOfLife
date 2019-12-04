@@ -16,7 +16,7 @@ namespace Mono.Game.Models
 
         public Weapon(float x, float y, string textureName, float speed, double damage, int maxLiveProjectiles, int fireRate)
         {
-            this.TextureName = textureName;
+            this.TextureName = null;
             this.X = x;
             this.Y = y;
             this.Speed = speed;
@@ -24,23 +24,22 @@ namespace Mono.Game.Models
 
             this.MaxLiveProjectiles = maxLiveProjectiles;
             this.FireRate = fireRate;
+
+            this.Projectiles = new List<Projectile>();
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            throw new System.NotImplementedException();
-        }
+        
 
         public override void LoadContent(ContentManager contentManager)
         {
             this.Texture = contentManager.Load<Texture2D>(TextureName);
         }
 
-        public void Fire()
+        public void Fire(float x, float y, float rotation)
         {
             if(Projectiles.Count < MaxLiveProjectiles)
             {
-                Projectiles.Add(new Projectile(X,Y,Speed));
+                Projectiles.Add(new Projectile(X,Y,Speed,rotation,"projectile"));
             }
         }
 
@@ -53,5 +52,15 @@ namespace Mono.Game.Models
                 projectile.Update(gameTime);
             }
         }
+
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            foreach (Projectile projectile in Projectiles)
+            {
+                projectile.Draw(gameTime);
+            }
+        }
+
+
     }
 }

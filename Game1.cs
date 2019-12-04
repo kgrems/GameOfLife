@@ -91,7 +91,7 @@ public class Game1 : Game
 
         //UserInterface.Active.Update(gameTime);
         p1.Update(gameTime);
-
+        p1.Weapon.Update(gameTime);
         
         
         base.Update(gameTime);
@@ -109,6 +109,7 @@ public class Game1 : Game
         spriteBatch.Begin();
         
         p1.Draw(gameTime, spriteBatch);
+        p1.Weapon.Draw(gameTime, spriteBatch);
 
         //UserInterface.Active.Draw(spriteBatch);
 

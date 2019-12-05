@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using static Mono.Game.Globals.ContentLoader;
 
 namespace Mono.Game.Models
 {
@@ -21,7 +22,7 @@ namespace Mono.Game.Models
 
         public Weapon Weapon { get; set; }
 
-        public Player(int x, int y, int hp, int stamina, int xp, uint id, string name, int speed, int sprintSpeed, float rotationSpeed, string textureName)
+        public Player(int x, int y, int hp, int stamina, int xp, uint id, string name, int speed, int sprintSpeed, float rotationSpeed)
         {
             this.X = x;
             this.Y = y;
@@ -32,17 +33,22 @@ namespace Mono.Game.Models
             this.Name = name;
             this.Speed = speed;
             this.SprintSpeed = sprintSpeed;
-            this.TextureName = textureName;
+
             this.Rotation = 0f;
             this.RotationSpeed = rotationSpeed;
 
             this.IsFiring = false;
             this.CurrentDirection = (int)DIRECTIONS.DOWN;
+            
+            //Texture is loaded from Assets/ContentLoader
+            this.Texture = playerTexture;
+
+            Console.WriteLine(Texture.ToString());
         }
 
         public override void LoadContent(ContentManager contentManager)
         {
-            this.Texture = contentManager.Load<Texture2D>(TextureName);
+            
         }
 
         public override void Update(GameTime gameTime)

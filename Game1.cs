@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using Mono.Game.Models;
 using System;
 using System.Collections.Generic;
+using static Mono.Game.Globals.ContentLoader;
 
 
 /// <summary>
@@ -22,6 +23,8 @@ public class Game1 : Game
     SpriteBatch spriteBatch;
 
     SpriteFont hudFont;
+
+    
 
     public Game1()
     {
@@ -42,8 +45,12 @@ public class Game1 : Game
         // TODO: Add your initialization logic here
         //UserInterface.Initialize(Content, BuiltinThemes.hd);
 
-        p1 = new Player(screenWidth / 2, screenHeight / 2, 100, 100, 0, 1, "Drekutu", 100, 1, (float)Math.PI, "ball");
-        w1 = new Weapon(p1.X, p1.Y, "projectile", 100f, 5f, 5, 5);
+        //comes from Assets/ContentLoader
+        Load(this.Content);
+
+        p1 = new Player(screenWidth / 2, screenHeight / 2, 100, 100, 0, 1, "Drekutu", 100, 1, (float)Math.PI);
+        
+        w1 = new Weapon(p1.X, p1.Y, 200f, 5f, 5, 5);
         p1.Weapon = w1;
 
         base.Initialize();
@@ -59,11 +66,6 @@ public class Game1 : Game
         spriteBatch = new SpriteBatch(GraphicsDevice);
 
         // TODO: use this.Content to load your game content here
-        //ballTexture = Content.Load<Texture2D>("ball");
-        //weapon1Texture = Content.Load<Texture2D>("weapon1");
-        //weapon2Texture = Content.Load<Texture2D>("weapon2");
-
-        p1.LoadContent(this.Content);
 
         hudFont = Content.Load<SpriteFont>("HUDFont");
     }
@@ -92,7 +94,7 @@ public class Game1 : Game
         //UserInterface.Active.Update(gameTime);
         p1.Update(gameTime);
         p1.Weapon.Update(gameTime);
-        
+        Console.WriteLine("Projectiles: " + p1.Weapon.Projectiles.Count);
         
         base.Update(gameTime);
     }

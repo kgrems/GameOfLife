@@ -8,13 +8,13 @@ namespace Mono.Game.Models
 {
     class Weapon : Actor
     {
-        double Damage { get; set; }
-        int MaxLiveProjectiles { get; set; }
-        int FireRate { get; set; }
+        public double Damage { get; set; }
+        public int MaxLiveProjectiles { get; set; }
+        public int FireRate { get; set; }
 
-        List<Projectile> Projectiles { get; set; }
+        public List<Projectile> Projectiles { get; set; }
 
-        public Weapon(float x, float y, string textureName, float speed, double damage, int maxLiveProjectiles, int fireRate)
+        public Weapon(float x, float y, float speed, double damage, int maxLiveProjectiles, int fireRate)
         {
             this.TextureName = null;
             this.X = x;
@@ -32,14 +32,14 @@ namespace Mono.Game.Models
 
         public override void LoadContent(ContentManager contentManager)
         {
-            this.Texture = contentManager.Load<Texture2D>(TextureName);
+
         }
 
         public void Fire(float x, float y, float rotation)
         {
             if(Projectiles.Count < MaxLiveProjectiles)
             {
-                Projectiles.Add(new Projectile(X,Y,Speed,rotation,"projectile"));
+                Projectiles.Add(new Projectile(x,y,Speed,rotation));
             }
         }
 
@@ -57,7 +57,7 @@ namespace Mono.Game.Models
         {
             foreach (Projectile projectile in Projectiles)
             {
-                projectile.Draw(gameTime);
+                projectile.Draw(gameTime, spriteBatch);
             }
         }
 

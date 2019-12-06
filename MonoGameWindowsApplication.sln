@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29418.71
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoGameWindowsApplication", "MonoGameWindowsApplication.csproj", "{CFA05DCA-3E33-41C2-8387-C7CCF9498F5B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelBuilder", "..\LevelBuilder\LevelBuilder.csproj", "{021794D4-2CA2-44E9-B32F-2D07D0675318}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LevelBuilder", "LevelBuilder\LevelBuilder.csproj", "{021794D4-2CA2-44E9-B32F-2D07D0675318}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

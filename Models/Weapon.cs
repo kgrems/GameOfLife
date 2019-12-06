@@ -55,6 +55,8 @@ namespace Mono.Game.Models
 
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            List<Projectile> toRemove = new List<Projectile>();
+
             foreach (Projectile projectile in Projectiles)
             {
                 projectile.Draw(gameTime, spriteBatch);

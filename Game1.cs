@@ -7,6 +7,7 @@ using Mono.Game.Models;
 using System;
 using System.Collections.Generic;
 using static Mono.Game.Globals.ContentLoader;
+using static Mono.Game.Globals.Globals;
 
 
 /// <summary>
@@ -29,6 +30,8 @@ public class Game1 : Game
     public Game1()
     {
         graphics = new GraphicsDeviceManager(this);
+        graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
+        graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
         screenWidth = graphics.PreferredBackBufferWidth / 2;
         screenHeight = graphics.PreferredBackBufferHeight / 2;
         Content.RootDirectory = "Content";

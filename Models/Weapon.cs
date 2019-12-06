@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Mono.Game.Interfaces;
 using System.Collections.Generic;
+using static Mono.Game.Globals.Globals;
 
 namespace Mono.Game.Models
 {
@@ -56,6 +57,21 @@ namespace Mono.Game.Models
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             List<Projectile> toRemove = new List<Projectile>();
+
+            foreach (Projectile projectile in Projectiles)
+            {
+                if ((projectile.X + projectile.Texture.Width) > SCREEN_WIDTH || (projectile.X + projectile.Texture.Width) < 0 || (projectile.Y + projectile.Texture.Height) < 0 || projectile.Y > SCREEN_HEIGHT)
+                {
+                    toRemove.Add(projectile);
+                }
+            }
+
+            foreach (Projectile projectile in toRemove)
+            {
+                Projectiles.Remove(projectile);
+            }
+
+            toRemove.Clear();
 
             foreach (Projectile projectile in Projectiles)
             {

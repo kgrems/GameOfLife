@@ -17,8 +17,6 @@ public class Game1 : Game
 {
     Player p1;
     Weapon w1;
-    int screenWidth;
-    int screenHeight;
 
     GraphicsDeviceManager graphics;
     SpriteBatch spriteBatch;
@@ -32,8 +30,7 @@ public class Game1 : Game
         graphics = new GraphicsDeviceManager(this);
         graphics.PreferredBackBufferWidth = SCREEN_WIDTH;
         graphics.PreferredBackBufferHeight = SCREEN_HEIGHT;
-        screenWidth = graphics.PreferredBackBufferWidth / 2;
-        screenHeight = graphics.PreferredBackBufferHeight / 2;
+
         Content.RootDirectory = "Content";
     }
 
@@ -51,7 +48,7 @@ public class Game1 : Game
         //comes from Assets/ContentLoader
         Load(this.Content);
 
-        p1 = new Player(screenWidth / 2, screenHeight / 2, 100, 100, 0, 1, "Drekutu", 100, 1, (float)Math.PI);
+        p1 = new Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 100, 100, 0, 1, "Drekutu", 100, 1, (float)Math.PI);
         
         w1 = new Weapon(p1.X, p1.Y, 200f, 5f, 5, 5);
         p1.Weapon = w1;

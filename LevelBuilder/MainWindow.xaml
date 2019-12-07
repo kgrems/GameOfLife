@@ -6,4 +6,4 @@
         xmlns:local="clr-namespace:LevelBuilder"
         mc:Ignorable="d"
         Title="Level Builder" Height="768" Width="1280"
-        Source="Main.xaml" ShowsNavigationUI="False"/>
+        Source="MainPage.xaml" ShowsNavigationUI="False"/>

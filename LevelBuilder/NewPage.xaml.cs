@@ -16,13 +16,19 @@ using System.Windows.Shapes;
 namespace LevelBuilder
 {
     /// <summary>
-    /// Interaction logic for Options.xaml
+    /// Interaction logic for Main.xaml
     /// </summary>
-    public partial class Options : Page
+    public partial class NewPage : Page
     {
-        public Options()
+        public NewPage()
         {
             InitializeComponent();
+        }
+
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            MainPage mainPage = new MainPage();
+            this.NavigationService.Navigate(mainPage);
         }
     }
 }

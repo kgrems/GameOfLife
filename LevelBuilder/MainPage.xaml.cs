@@ -18,9 +18,9 @@ namespace LevelBuilder
     /// <summary>
     /// Interaction logic for Main.xaml
     /// </summary>
-    public partial class Main : Page
+    public partial class MainPage : Page
     {
-        public Main()
+        public MainPage()
         {
             InitializeComponent();
         }
@@ -32,7 +32,14 @@ namespace LevelBuilder
 
         private void btnNew_Click(object sender, RoutedEventArgs e)
         {
+            NewPage newPage = new NewPage();
+            this.NavigationService.Navigate(newPage);
+        }
 
+        private void btnOptions_Click(object sender, RoutedEventArgs e)
+        {
+            OptionsPage optionsPage = new OptionsPage();
+            this.NavigationService.Navigate(optionsPage);
         }
     }
 }

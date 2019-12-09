@@ -46,11 +46,6 @@ namespace Mono.Game.Models
             Console.WriteLine(Texture.ToString());
         }
 
-        public override void LoadContent(ContentManager contentManager)
-        {
-            
-        }
-
         public override void Update(GameTime gameTime)
         {
             float Dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -108,6 +103,11 @@ namespace Mono.Game.Models
         public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) 
         {
             spriteBatch.Draw(Texture, new Vector2(X,Y), null, Color.White, Rotation, new Vector2(Texture.Width / 2, Texture.Height / 2), Vector2.One, SpriteEffects.None, 0f);
+        }
+
+        public override void LoadContent(ContentManager contentManager)
+        {
+            throw new NotImplementedException();
         }
     }
 }

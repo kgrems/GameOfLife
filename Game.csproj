@@ -43,15 +43,10 @@
   <ItemGroup>
     <Compile Include="Globals\ContentLoader.cs" />
     <Compile Include="Globals\Globals.cs" />
-    <Compile Include="Interfaces\IDrawable.cs" />
-    <Compile Include="Interfaces\IUpdateable.cs" />
-    <Compile Include="Interfaces\IWearable.cs" />
     <Compile Include="Models\Actor.cs" />
     <Compile Include="Models\Armor.cs" />
     <Compile Include="Models\BaseEntity.cs" />
     <Compile Include="Game1.cs" />
-    <Compile Include="Interfaces\IAttack.cs" />
-    <Compile Include="Interfaces\IUseable.cs" />
     <Compile Include="Models\Item.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\Projectile.cs" />

@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using static Mono.Game.Globals.ContentLoader;
 using static Mono.Game.Globals.Globals;
+//using System.Text.Json;
+//using System.Text.Json.Serialization;
 
 
 /// <summary>
@@ -49,8 +51,9 @@ public class Game1 : Game
         Load(this.Content);
 
         p1 = new Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 100, 100, 0, 1, "Drekutu", 100, 1, (float)Math.PI);
-        
-        w1 = new Weapon(p1.X, p1.Y, 200f, 5f, 5, 5);
+        p1.Texture = playerTexture;
+
+        w1 = new Weapon(p1.X, p1.Y, 550f, 5f, 5, 5);
         p1.Weapon = w1;
 
         base.Initialize();
@@ -89,13 +92,17 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
+        var kstate = Keyboard.GetState();
+
+        if (kstate.IsKeyDown(Keys.Enter))
+        {
+
+        }
 
         //UserInterface.Active.Update(gameTime);
         p1.Update(gameTime);
         p1.Weapon.Update(gameTime);
-        Console.WriteLine("Projectiles: " + p1.Weapon.Projectiles.Count);
-        
+
         base.Update(gameTime);
     }
 

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mono.Game.Models
-{
-    abstract class BaseEntity
+namespace DataLibrary { 
+
+    public abstract class BaseEntity
     {
         public uint Id { get; set; }
         public string Name { get; set; }

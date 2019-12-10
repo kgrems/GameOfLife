@@ -7,11 +7,11 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using static Mono.Game.Globals.ContentLoader;
+//using static Mono.Game.Globals.ContentLoader;
 
-namespace Mono.Game.Models
+namespace DataLibrary
 {
-    class Player : Actor
+    public class Player : Actor
     {
         public int Hp { get; set; }
 
@@ -22,7 +22,7 @@ namespace Mono.Game.Models
 
         public Weapon Weapon { get; set; }
 
-        public Player(int x, int y, int hp, int stamina, int xp, uint id, string name, int speed, int sprintSpeed, float rotationSpeed)
+        public Player(float x, float y, int hp, int stamina, int xp, uint id, string name, float speed, int sprintSpeed, float rotationSpeed)
         {
             this.X = x;
             this.Y = y;
@@ -39,9 +39,11 @@ namespace Mono.Game.Models
 
             this.IsFiring = false;
             this.CurrentDirection = (int)DIRECTIONS.DOWN;
-            
+
+            //this.TextureName = textureName;
+
             //Texture is loaded from Assets/ContentLoader
-            this.Texture = playerTexture;
+            //this.Texture = playerTexture;
         }
 
         public override void Update(GameTime gameTime)
@@ -56,7 +58,7 @@ namespace Mono.Game.Models
                 Y += (float)(Speed * Math.Sin(Rotation) * Dt * SprintSpeed);
                 X += (float)(Speed * Math.Cos(Rotation) * Dt * SprintSpeed);
                 CurrentDirection = (int)DIRECTIONS.UP;
-                
+
             }
             if (kstate.IsKeyDown(Keys.Down))
             {
@@ -76,11 +78,13 @@ namespace Mono.Game.Models
                 CurrentDirection = (int)DIRECTIONS.RIGHT;
             }
 
-            if (kstate.IsKeyDown(Keys.LeftShift)) {
+            if (kstate.IsKeyDown(Keys.LeftShift))
+            {
                 SprintSpeed = 2;
             }
 
-            if (kstate.IsKeyUp(Keys.LeftShift)) {
+            if (kstate.IsKeyUp(Keys.LeftShift))
+            {
                 SprintSpeed = 1;
             }
 
@@ -89,7 +93,7 @@ namespace Mono.Game.Models
                 if (!IsFiring)
                 {
                     IsFiring = true;
-                    Weapon.Fire(X,Y,Rotation);
+                    Weapon.Fire(X, Y, Rotation);
                 }
             }
             if (kstate.IsKeyUp(Keys.Space))
@@ -98,9 +102,9 @@ namespace Mono.Game.Models
             }
         }
 
-        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch) 
+        public override void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, new Vector2(X,Y), null, Color.White, Rotation, new Vector2(Texture.Width / 2, Texture.Height / 2), Vector2.One, SpriteEffects.None, 0f);
+            spriteBatch.Draw(Texture, new Vector2(X, Y), null, Color.White, Rotation, new Vector2(Texture.Width / 2, Texture.Height / 2), Vector2.One, SpriteEffects.None, 0f);
         }
 
         public override void LoadContent(ContentManager contentManager)

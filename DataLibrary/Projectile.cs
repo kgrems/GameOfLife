@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using static Mono.Game.Globals.ContentLoader;
+//using static Mono.Game.Globals.ContentLoader;
 
-namespace Mono.Game.Models
+namespace DataLibrary
 {
-    class Projectile : Actor
+    public class Projectile : Actor
     {
 
         public float yc { get; set; }
@@ -28,9 +28,9 @@ namespace Mono.Game.Models
             this.xc = (float)Math.Cos(Rotation) * Speed;
 
             //Texture comes from ContentLoader
-            this.Texture = projectile1Texture;
+            //this.Texture = projectile1Texture;
         }
-        
+
 
         public override void LoadContent(ContentManager contentManager)
         {

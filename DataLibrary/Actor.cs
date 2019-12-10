@@ -2,17 +2,20 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Newtonsoft.Json;
 using System;
 
-namespace Mono.Game.Models
+namespace DataLibrary
 {
-    abstract class Actor : BaseEntity
+    public abstract class Actor : BaseEntity
     {
         //public static Content.RootDirectory = "Content";.
 
         public enum DIRECTIONS { UP, DOWN, LEFT, RIGHT };
 
+        [JsonIgnore]
         public Texture2D Texture { get; set; }
+
         public string TextureName { get; set; }
         //public float X { get; set; }
 

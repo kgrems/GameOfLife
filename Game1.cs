@@ -3,14 +3,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Mono.Game.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using static Mono.Game.Globals.ContentLoader;
 using static Mono.Game.Globals.Globals;
-//using System.Text.Json;
-//using System.Text.Json.Serialization;
+using DataLibrary;
 
 
 /// <summary>
@@ -18,6 +16,7 @@ using static Mono.Game.Globals.Globals;
 /// </summary>
 public class Game1 : Game
 {
+    
     Player p1;
     Weapon w1;
 
@@ -51,10 +50,15 @@ public class Game1 : Game
         //comes from Assets/ContentLoader
         Load(this.Content);
 
-        p1 = new Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 100, 100, 0, 1, "Drekutu", 100, 1, (float)Math.PI);
+        string json = System.IO.File.ReadAllText(@"C:\Users\kgrems\source\repos\MonoGame\player.dat");
+        p1 = JsonConvert.DeserializeObject<Player>(json);
+
+        //p1 = new Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 100, 100, 0, 1, "Drekutu", 100, 1, (float)Math.PI);
         p1.Texture = playerTexture;
 
         w1 = new Weapon(p1.X, p1.Y, 550f, 5f, 5, 5);
+        w1.Texture = projectile1Texture;
+
         p1.Weapon = w1;
 
         base.Initialize();
@@ -95,6 +99,7 @@ public class Game1 : Game
 
         var kstate = Keyboard.GetState();
 
+        //testing serialization
         if (kstate.IsKeyDown(Keys.Enter))
         {
             string output = JsonConvert.SerializeObject(p1);

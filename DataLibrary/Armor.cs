@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Mono.Game.Models
+namespace DataLibrary
 {
-    abstract class Item
+    public class Armor
     {
     }
 }

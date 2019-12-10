@@ -2,11 +2,11 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using static Mono.Game.Globals.Globals;
+//using static Mono.Game.Globals.Globals;
 
-namespace Mono.Game.Models
+namespace DataLibrary
 {
-    class Weapon : Actor
+    public class Weapon : Actor
     {
         public double Damage { get; set; }
         public int MaxLiveProjectiles { get; set; }
@@ -26,9 +26,10 @@ namespace Mono.Game.Models
             this.FireRate = fireRate;
 
             this.Projectiles = new List<Projectile>();
+            
         }
 
-        
+
 
         public override void LoadContent(ContentManager contentManager)
         {
@@ -37,9 +38,11 @@ namespace Mono.Game.Models
 
         public void Fire(float x, float y, float rotation)
         {
-            if(Projectiles.Count < MaxLiveProjectiles)
+            if (Projectiles.Count < MaxLiveProjectiles)
             {
-                Projectiles.Add(new Projectile(x,y,Speed,rotation));
+                Projectile p = new Projectile(x, y, Speed, rotation);
+                p.Texture = this.Texture;
+                Projectiles.Add(p);
             }
         }
 
@@ -59,7 +62,8 @@ namespace Mono.Game.Models
 
             foreach (Projectile projectile in Projectiles)
             {
-                if ((projectile.X + projectile.Texture.Width) > SCREEN_WIDTH || (projectile.X + projectile.Texture.Width) < 0 || (projectile.Y + projectile.Texture.Height) < 0 || projectile.Y > SCREEN_HEIGHT)
+                //TODO - fix this
+                if ((projectile.X + projectile.Texture.Width) > 800 || (projectile.X + projectile.Texture.Width) < 0 || (projectile.Y + projectile.Texture.Height) < 0 || projectile.Y > 600)
                 {
                     toRemove.Add(projectile);
                 }

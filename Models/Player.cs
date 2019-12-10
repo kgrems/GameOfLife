@@ -42,8 +42,6 @@ namespace Mono.Game.Models
             
             //Texture is loaded from Assets/ContentLoader
             this.Texture = playerTexture;
-
-            Console.WriteLine(Texture.ToString());
         }
 
         public override void Update(GameTime gameTime)

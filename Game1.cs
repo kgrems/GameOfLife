@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Mono.Game.Models;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using static Mono.Game.Globals.ContentLoader;
@@ -96,7 +97,8 @@ public class Game1 : Game
 
         if (kstate.IsKeyDown(Keys.Enter))
         {
-
+            string output = JsonConvert.SerializeObject(p1);
+            System.IO.File.WriteAllText(@"C:\Users\kgrems\source\repos\MonoGame\player.dat", output);
         }
 
         //UserInterface.Active.Update(gameTime);

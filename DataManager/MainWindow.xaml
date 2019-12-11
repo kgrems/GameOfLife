@@ -7,7 +7,12 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <TabControl x:Name="tabControl"   VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Label x:Name="lblStatusMessage" Content="" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF74ED00"/>
+        <TabControl x:Name="tabControl"   VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Grid.Row="1">
             <TabItem Header="Player">
                 <Grid Background="#FFE5E5E5">
                     <Grid.ColumnDefinitions>
@@ -18,10 +23,10 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Column="0">
                         <Label x:Name="lblName" Content="Name" FontWeight="Bold" />
-                        <Label x:Name="lblNameError" Content="sdf" FontWeight="Bold" Foreground="Red"/>
+                        <Label x:Name="lblNameError" Content="sdf" Foreground="Red" FontStyle="Italic" FontSize="10"/>
                         <TextBox x:Name="txtName" Height="23" TextWrapping="Wrap" Text=""/>
                         <Label x:Name="lblXP" Content="XP" FontWeight="Bold"/>
-                        <Label x:Name="lblXPError" Content="sdf" FontWeight="Bold" Foreground="Red"/>
+                        <Label x:Name="lblXPError" Content="sdf" Foreground="Red" FontStyle="Italic" FontSize="10"/>
                         <TextBox x:Name="txtXP" Height="23" TextWrapping="Wrap" Text=""/>
                         <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Left" Click="btnSaveClick"  />
 

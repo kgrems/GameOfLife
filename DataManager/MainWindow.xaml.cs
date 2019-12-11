@@ -23,6 +23,8 @@ namespace DataManager
     public partial class MainWindow : Window
     {
         private Player p1;
+        private string formatError = "Incorrect format for input.";
+        private string valueRequiredError = "Value required.";
 
         public MainWindow()
         {
@@ -36,8 +38,33 @@ namespace DataManager
 
         private void btnSaveClick(object sender, RoutedEventArgs e)
         {
-            p1.Name = txtName.Text;
-            p1.Xp = int.Parse(txtXP.Text);
+            bool isDirty = false;
+            if(txtName.Text.Length == 0)
+            {
+                isDirty = true;
+                lblNameError.Content = valueRequiredError;
+            }
+            else
+            {
+                p1.Name = txtName.Text;
+            }
+
+            try
+            {
+                p1.Xp = int.Parse(txtXP.Text);
+            }
+            catch (FormatException)
+            {
+                isDirty = true;
+                lblXPError.Content = formatError;
+            }
+
+            if (!isDirty)
+            {
+                string output = JsonConvert.SerializeObject(p1);
+                System.IO.File.WriteAllText(@"C:\Users\kgrems\source\repos\MonoGame\player.dat", output);
+                lblStatusMessage.Content = "Player saved successfully.";
+            }
         }
     }
 }

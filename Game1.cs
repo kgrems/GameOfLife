@@ -3,29 +3,62 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using static Mono.Game.Globals.ContentLoader;
-using static Mono.Game.Globals.Globals;
-using DataLibrary;
 
 
 /// <summary>
 /// This is the main type for your game.
 /// </summary>
+public class Cell
+{
+    public int x;
+    public int y;
+    public Vector2 position;
+    public Color state;
+    public Color[] data;
+    public Texture2D rect;
+
+    public Cell(int x, int y, Color state, GraphicsDeviceManager graphics)
+    {
+        this.x = x;
+        this.y = y;
+        this.state = state;
+        this.position = new Vector2(x, y);
+        data = new Color[20 * 20];
+        for (int i = 0; i < data.Length; ++i)
+            data[i] = state;
+
+        rect = new Texture2D(graphics.GraphicsDevice, 20, 20);
+        rect.SetData(data);
+
+    }
+}
+
 public class Game1 : Game
 {
-    
-    Player p1;
-    Weapon w1;
 
-    GraphicsDeviceManager graphics;
-    SpriteBatch spriteBatch;
 
-    SpriteFont hudFont;
+    public int frame;
+    public bool isKeyDown;
 
-    
+    public GraphicsDeviceManager graphics;
+    public SpriteBatch spriteBatch;
+
+    public static int SCREEN_WIDTH = 1800;
+    public static int SCREEN_HEIGHT = 900;
+
+    public static Color LIVE = Color.Blue;
+    public static Color DEAD = Color.LightSalmon;
+
+    public static int SQUARE_SIZE = 20;
+
+    public static int X_SQUARES = SCREEN_WIDTH / SQUARE_SIZE;
+    public static int Y_SQUARES = SCREEN_HEIGHT / SQUARE_SIZE;
+
+    public Cell[,] cells;
+
+    public Texture2D rect;
+    public Color[] data;
+    Vector2 boardPosition;
 
     public Game1()
     {
@@ -36,31 +69,31 @@ public class Game1 : Game
         Content.RootDirectory = "Content";
     }
 
-    /// <summary>
-    /// Allows the game to perform any initialization it needs to before starting to run.
-    /// This is where it can query for any required services and load any non-graphic
-    /// related content.  Calling base.Initialize will enumerate through any components
-    /// and initialize them as well.
-    /// </summary>
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
-        //UserInterface.Initialize(Content, BuiltinThemes.hd);
+        cells = new Cell[Y_SQUARES,X_SQUARES];
+        isKeyDown = false;
+        rect = new Texture2D(graphics.GraphicsDevice, 20, 20);
 
-        //comes from Assets/ContentLoader
-        Load(this.Content);
+        data = new Color[20 * 20];
+        for (int i = 0; i < data.Length; ++i)
+            data[i] = LIVE;
+        rect.SetData(data);
+        boardPosition = new Vector2(0, 0);
 
-        string json = System.IO.File.ReadAllText(@"C:\Users\kgrems\source\repos\MonoGame\player.dat");
-        p1 = JsonConvert.DeserializeObject<Player>(json);
-
-        //p1 = new Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, 100, 100, 0, 1, "Drekutu", 100, 1, (float)Math.PI);
-        p1.Texture = playerTexture;
-
-        w1 = new Weapon(p1.X, p1.Y, 550f, 5f, 5, 5);
-        w1.Texture = projectile1Texture;
-
-        p1.Weapon = w1;
-
+        for (int y = 0; y < Y_SQUARES; y++)
+        {
+            for (int x = 0; x < X_SQUARES; x++)
+            {
+                cells[y,x] = new Cell(x * SQUARE_SIZE,y * SQUARE_SIZE, DEAD, graphics);
+                if( (y == 10 && x == 10) || (y == 10 && x == 11) || (y == 10 && x == 12))
+                {
+                    cells[y, x].state = LIVE;
+                }
+            }
+        }
+        frame = 0;
         base.Initialize();
     }
 
@@ -75,7 +108,6 @@ public class Game1 : Game
 
         // TODO: use this.Content to load your game content here
 
-        hudFont = Content.Load<SpriteFont>("HUDFont");
     }
 
     /// <summary>
@@ -94,21 +126,68 @@ public class Game1 : Game
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Update(GameTime gameTime)
     {
-        if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-            Exit();
-
         var kstate = Keyboard.GetState();
 
-        //testing serialization
-        if (kstate.IsKeyDown(Keys.Enter))
+        if (kstate.IsKeyDown(Keys.Space))
         {
-            string output = JsonConvert.SerializeObject(p1);
-            System.IO.File.WriteAllText(@"C:\Users\kgrems\source\repos\MonoGame\player.dat", output);
+            isKeyDown = true;
         }
+        if(kstate.IsKeyUp(Keys.Space) && isKeyDown)
+        {
+            isKeyDown = false;
+            System.Console.WriteLine("Frame: " + frame);
+            frame++;
 
-        //UserInterface.Active.Update(gameTime);
-        p1.Update(gameTime);
-        p1.Weapon.Update(gameTime);
+            for (int row = 0; row < Y_SQUARES; row++)
+            {
+                for (int col = 0; col < X_SQUARES; col++)
+                {
+                    //don't do anything if on edge yet
+                    if (row > 0 && row + 1 < Y_SQUARES && col > 0 && col + 1 < X_SQUARES)
+                    {
+
+                        // need to process each cell and copy the result to a new board
+                        //   currently the board is being modified in place.
+                        int liveNeighbors = CalcLiveNeighbors(row, col);
+
+                        if (cells[row, col].state == LIVE)
+                        {
+                            if (liveNeighbors < 2)
+                            {
+                                cells[row, col].state = DEAD;
+                            }
+                            else if (liveNeighbors > 3)
+                            {
+                                cells[row, col].state = DEAD;
+                            }
+                            else if (liveNeighbors == 2 || liveNeighbors == 3)
+                            {
+                                cells[row, col].state = LIVE;
+                            }
+                        }
+                        else
+                        {
+                            if (liveNeighbors == 3)
+                            {
+                                cells[row, col].state = LIVE;
+                            }
+                        }
+
+
+
+                    }
+
+
+                }
+            }
+        }
+        /*
+-Any live cell with fewer than two live neighbours dies (referred to as underpopulation or exposure[1]).
+-Any live cell with more than three live neighbours dies (referred to as overpopulation or overcrowding).
+-Any live cell with two or three live neighbours lives, unchanged, to the next generation.
+Any dead cell with exactly three live neighbours will come to life.
+        */
+        
 
         base.Update(gameTime);
     }
@@ -119,19 +198,73 @@ public class Game1 : Game
     /// <param name="gameTime">Provides a snapshot of timing values.</param>
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.CornflowerBlue);
+
+        GraphicsDevice.Clear(Color.Black);
 
         // TODO: Add your drawing code here
         spriteBatch.Begin();
-        
-        p1.Draw(gameTime, spriteBatch);
-        p1.Weapon.Draw(gameTime, spriteBatch);
 
-        //UserInterface.Active.Draw(spriteBatch);
 
-        spriteBatch.DrawString(hudFont, p1.Name, new Vector2(0f,0f), Color.White, 0, new Vector2(0f,0f), 1.0f, SpriteEffects.None, 0.5f);
+        for (int row = 0; row < Y_SQUARES; row++)
+        {
+            for(int col = 0; col < X_SQUARES; col++)
+            {
+                spriteBatch.Draw(cells[row,col].rect, cells[row, col].position, cells[row,col].state);
+            }
+        }
+
+        //spriteBatch.Draw(cells[1, 1].rect, cells[1, 1].position, cells[1, 1].state);
         spriteBatch.End();
 
         base.Draw(gameTime);
+    }
+
+    int CalcLiveNeighbors(int row, int col)
+    {
+        int liveNeighbors = 0;
+
+        //top-left
+        if(cells[row-1,col-1].state == LIVE)
+        {
+            liveNeighbors++;
+        }
+        //top-middle
+        if (cells[row - 1, col].state == LIVE)
+        {
+            liveNeighbors++;
+
+        }
+        //top-right
+        if(cells[row-1,col+1].state == LIVE)
+        {
+            liveNeighbors++;
+        }
+        //middle-left
+        if (cells[row, col-1].state == LIVE)
+        {
+            liveNeighbors++;
+        }
+        //middle-right
+        if (cells[row, col+1].state == LIVE)
+        {
+            liveNeighbors++;
+        }
+        //bottom-left
+        if (cells[row+1, col-1].state == LIVE)
+        {
+            liveNeighbors++;
+        }
+        //bottom-middle
+        if (cells[row+1, col].state == LIVE)
+        {
+            liveNeighbors++;
+        }
+        //bottom-right
+        if (cells[row+1, col+1].state == LIVE)
+        {
+            liveNeighbors++;
+        }
+
+        return liveNeighbors;
     }
 }

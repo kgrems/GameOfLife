@@ -42,8 +42,6 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Globals\ContentLoader.cs" />
-    <Compile Include="Globals\Globals.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -77,12 +75,6 @@
     <None Include="app.config" />
     <None Include="app.manifest" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="DataLibrary\DataLibrary.csproj">
-      <Project>{dbd1e3ce-f669-4c02-911c-58fc373fc1ec}</Project>
-      <Name>DataLibrary</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

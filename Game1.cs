@@ -3,7 +3,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using System;
 
 /// <summary>
 /// This is the main type for your game.
@@ -54,7 +54,8 @@ public class Game1 : Game
     public static int X_SQUARES = SCREEN_WIDTH / SQUARE_SIZE;
     public static int Y_SQUARES = SCREEN_HEIGHT / SQUARE_SIZE;
 
-    public Cell[,] cells;
+    public Cell[,] currentBoard;
+    public Cell[,] newBoard;
 
     public Texture2D rect;
     public Color[] data;
@@ -72,7 +73,9 @@ public class Game1 : Game
     protected override void Initialize()
     {
         // TODO: Add your initialization logic here
-        cells = new Cell[Y_SQUARES,X_SQUARES];
+        currentBoard = new Cell[Y_SQUARES,X_SQUARES];
+        newBoard = new Cell[Y_SQUARES, X_SQUARES];
+
         isKeyDown = false;
         rect = new Texture2D(graphics.GraphicsDevice, 20, 20);
 
@@ -82,17 +85,15 @@ public class Game1 : Game
         rect.SetData(data);
         boardPosition = new Vector2(0, 0);
 
-        for (int y = 0; y < Y_SQUARES; y++)
-        {
-            for (int x = 0; x < X_SQUARES; x++)
-            {
-                cells[y,x] = new Cell(x * SQUARE_SIZE,y * SQUARE_SIZE, DEAD, graphics);
-                if( (y == 10 && x == 10) || (y == 10 && x == 11) || (y == 10 && x == 12))
-                {
-                    cells[y, x].state = LIVE;
-                }
-            }
-        }
+        //InitBoardOscillator(ref currentBoard);
+        InitBoardRandom(ref currentBoard);
+
+        //CopyBoard(currentBoard, ref newBoard);
+        FillBoardDead(ref newBoard);
+        PrintBoard(currentBoard);
+        System.Console.WriteLine("------------");
+        //PrintBoard(newBoard);
+
         frame = 0;
         base.Initialize();
     }
@@ -147,39 +148,45 @@ public class Game1 : Game
                     {
 
                         // need to process each cell and copy the result to a new board
-                        //   currently the board is being modified in place.
+                        //   currently the board is being modified in place... no good
                         int liveNeighbors = CalcLiveNeighbors(row, col);
 
-                        if (cells[row, col].state == LIVE)
+                        if (currentBoard[row, col].state == LIVE)
                         {
                             if (liveNeighbors < 2)
                             {
-                                cells[row, col].state = DEAD;
+                                //currentBoard[row, col].state = DEAD;
+                                newBoard[row, col].state = DEAD;
                             }
                             else if (liveNeighbors > 3)
                             {
-                                cells[row, col].state = DEAD;
+                                //currentBoard[row, col].state = DEAD;
+                                newBoard[row, col].state = DEAD;
                             }
                             else if (liveNeighbors == 2 || liveNeighbors == 3)
                             {
-                                cells[row, col].state = LIVE;
+                                //currentBoard[row, col].state = LIVE;
+                                newBoard[row, col].state = LIVE;
                             }
                         }
                         else
                         {
                             if (liveNeighbors == 3)
                             {
-                                cells[row, col].state = LIVE;
+                                //currentBoard[row, col].state = LIVE;
+                                newBoard[row, col].state = LIVE;
+                            }
+                            else
+                            {
+                                newBoard[row, col].state = currentBoard[row, col].state;
                             }
                         }
-
-
-
                     }
-
-
                 }
             }
+
+            CopyBoard(newBoard, ref currentBoard);
+            FillBoardDead(ref newBoard);
         }
         /*
 -Any live cell with fewer than two live neighbours dies (referred to as underpopulation or exposure[1]).
@@ -209,11 +216,11 @@ Any dead cell with exactly three live neighbours will come to life.
         {
             for(int col = 0; col < X_SQUARES; col++)
             {
-                spriteBatch.Draw(cells[row,col].rect, cells[row, col].position, cells[row,col].state);
+                spriteBatch.Draw(currentBoard[row,col].rect, currentBoard[row, col].position, currentBoard[row,col].state);
             }
         }
 
-        //spriteBatch.Draw(cells[1, 1].rect, cells[1, 1].position, cells[1, 1].state);
+        //spriteBatch.Draw(currentBoard[1, 1].rect, currentBoard[1, 1].position, currentBoard[1, 1].state);
         spriteBatch.End();
 
         base.Draw(gameTime);
@@ -224,47 +231,120 @@ Any dead cell with exactly three live neighbours will come to life.
         int liveNeighbors = 0;
 
         //top-left
-        if(cells[row-1,col-1].state == LIVE)
+        if(currentBoard[row-1,col-1].state == LIVE)
         {
             liveNeighbors++;
         }
         //top-middle
-        if (cells[row - 1, col].state == LIVE)
+        if (currentBoard[row - 1, col].state == LIVE)
         {
             liveNeighbors++;
 
         }
         //top-right
-        if(cells[row-1,col+1].state == LIVE)
+        if(currentBoard[row-1,col+1].state == LIVE)
         {
             liveNeighbors++;
         }
         //middle-left
-        if (cells[row, col-1].state == LIVE)
+        if (currentBoard[row, col-1].state == LIVE)
         {
             liveNeighbors++;
         }
         //middle-right
-        if (cells[row, col+1].state == LIVE)
+        if (currentBoard[row, col+1].state == LIVE)
         {
             liveNeighbors++;
         }
         //bottom-left
-        if (cells[row+1, col-1].state == LIVE)
+        if (currentBoard[row+1, col-1].state == LIVE)
         {
             liveNeighbors++;
         }
         //bottom-middle
-        if (cells[row+1, col].state == LIVE)
+        if (currentBoard[row+1, col].state == LIVE)
         {
             liveNeighbors++;
         }
         //bottom-right
-        if (cells[row+1, col+1].state == LIVE)
+        if (currentBoard[row+1, col+1].state == LIVE)
         {
             liveNeighbors++;
         }
 
         return liveNeighbors;
+    }
+
+    public void CopyBoard(Cell[,] fromBoard, ref Cell[,] toBoard)
+    {
+        for (int y = 0; y < Y_SQUARES; y++)
+        {
+            for (int x = 0; x < X_SQUARES; x++)
+            {
+                toBoard[y, x] = fromBoard[y, x];
+            }
+        }
+    }
+
+    public void PrintBoard(Cell[,] board)
+    {
+        for(int y = 0; y < Y_SQUARES; y++)
+        {
+            for(int x = 0; x < X_SQUARES; x++)
+            {
+                if (board[y, x].state == LIVE)
+                    System.Console.Write('O');
+                else
+                    System.Console.Write('X');
+            }
+            System.Console.WriteLine();
+        }
+    }
+
+    public void FillBoardDead(ref Cell[,] board)
+    {
+
+        for (int y = 0; y < Y_SQUARES; y++)
+        {
+            for (int x = 0; x < X_SQUARES; x++)
+            {
+                board[y, x] = new Cell(x * SQUARE_SIZE, y * SQUARE_SIZE, DEAD, graphics);
+            }
+        }
+    }
+
+    public void InitBoardOscillator(ref Cell[,] board)
+    {
+        for (int y = 0; y < Y_SQUARES; y++)
+        {
+            for (int x = 0; x < X_SQUARES; x++)
+            {
+                currentBoard[y, x] = new Cell(x * SQUARE_SIZE, y * SQUARE_SIZE, DEAD, graphics);
+                if ((y == 10 && x == 10) || (y == 10 && x == 11) || (y == 10 && x == 12))
+                {
+                    currentBoard[y, x].state = LIVE;
+                }
+            }
+        }
+    }
+
+    public void InitBoardRandom(ref Cell[,] board)
+    {
+        Random rand = new Random();
+        for (int y = 0; y < Y_SQUARES; y++)
+        {
+            for (int x = 0; x < X_SQUARES; x++)
+            {
+                currentBoard[y, x] = new Cell(x * SQUARE_SIZE, y * SQUARE_SIZE, DEAD, graphics);
+                if (rand.Next(0,3) == 0)
+                {
+                    currentBoard[y, x].state = LIVE;
+                }
+                else
+                {
+                    currentBoard[y, x].state = DEAD;
+                }
+            }
+        }
     }
 }

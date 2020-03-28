@@ -59,7 +59,7 @@ public class Game1 : Game
 
     public Texture2D rect;
     public Color[] data;
-    Vector2 boardPosition;
+    public Vector2 boardPosition;
 
     public Game1()
     {
@@ -117,7 +117,7 @@ public class Game1 : Game
     /// </summary>
     protected override void UnloadContent()
     {
-        // TODO: Unload any non ContentManager content here
+
     }
 
     /// <summary>
@@ -136,7 +136,7 @@ public class Game1 : Game
         if(kstate.IsKeyUp(Keys.Space) && isKeyDown)
         {
             isKeyDown = false;
-            System.Console.WriteLine("Frame: " + frame);
+            Console.WriteLine("Frame: " + frame);
             frame++;
 
             for (int row = 0; row < Y_SQUARES; row++)
@@ -189,10 +189,10 @@ public class Game1 : Game
             FillBoardDead(ref newBoard);
         }
         /*
--Any live cell with fewer than two live neighbours dies (referred to as underpopulation or exposure[1]).
--Any live cell with more than three live neighbours dies (referred to as overpopulation or overcrowding).
--Any live cell with two or three live neighbours lives, unchanged, to the next generation.
-Any dead cell with exactly three live neighbours will come to life.
+    -Any live cell with fewer than two live neighbours dies (referred to as underpopulation or exposure[1]).
+    -Any live cell with more than three live neighbours dies (referred to as overpopulation or overcrowding).
+    -Any live cell with two or three live neighbours lives, unchanged, to the next generation.
+    -Any dead cell with exactly three live neighbours will come to life.
         */
         
 
@@ -293,11 +293,11 @@ Any dead cell with exactly three live neighbours will come to life.
             for(int x = 0; x < X_SQUARES; x++)
             {
                 if (board[y, x].state == LIVE)
-                    System.Console.Write('O');
+                    Console.Write('O');
                 else
-                    System.Console.Write('X');
+                    Console.Write('X');
             }
-            System.Console.WriteLine();
+            Console.WriteLine();
         }
     }
 
